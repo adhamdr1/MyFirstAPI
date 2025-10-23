@@ -1,8 +1,4 @@
-﻿using Day_1.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace Day_1.Data.Configurations
+﻿namespace Day_1.Data.Configurations
 {
     public class StudentConfiguration : IEntityTypeConfiguration<Student>
     {

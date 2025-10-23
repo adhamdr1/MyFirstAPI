@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Day_1.Models
+﻿namespace Day_1.Models
 {
     public class Student
     {

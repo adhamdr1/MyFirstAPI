@@ -1,8 +1,4 @@
-﻿using Day_1.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-
-namespace Day_1.Data.Context
+﻿namespace Day_1.Data.Context
 {
     public class AppDbContext : DbContext
     {

@@ -1,10 +1,4 @@
-﻿using Day_1.Data.Context;
-using Day_1.DTO;
-using Day_1.Models;
-using Microsoft.AspNetCore.Mvc;
-
-
-namespace Day_1.Controllers
+﻿namespace Day_1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,7 +1,4 @@
-﻿using Day_1.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Day_1.Data.Context
+﻿namespace Day_1.Data.Context
 {
     public static class ModelBuilderExtensions
     {

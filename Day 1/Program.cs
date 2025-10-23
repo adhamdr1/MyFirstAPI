@@ -1,9 +1,3 @@
-
-using Day_1.Data.Context;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-
 namespace Day_1
 {
     public class Program
