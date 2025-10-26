@@ -19,7 +19,20 @@ namespace Day_1
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             //builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(option =>
+            option.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Title = "My First API",
+                Version = "v1",
+                Description = "This is my first ASP.NET Core Web API",
+                TermsOfService = new Uri("https://www.linkedin.com/in/adham-mohamed74/"),
+                Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                {
+                    Name = "Adham Mohamed",
+                    Email = "adhamdr10@gmail.com"
+                }
+                })
+            );
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
