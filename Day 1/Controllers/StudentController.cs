@@ -3,6 +3,7 @@
 namespace Day_1.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class StudentController : ControllerBase
     {

@@ -1,6 +1,7 @@
 ﻿namespace Day_1.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
@@ -23,7 +24,8 @@
                     Id = department.Id,
                     Name = department.Name,
                     Location = department.Loc,
-                    StudentsName = department.Students.Select(s=>s.FullName).ToList(),
+                    // StudentsName = department.Students.Select(s=>s.FullName).ToList(),
+                    CountOfStudent = department.Students.Count
                 };
                 deptDTO.Add(departmentDTO);
             }
@@ -46,7 +48,8 @@
                 Id = department.Id,
                 Name = department.Name,
                 Location = department.Loc,
-                StudentsName = department.Students.Select(s => s.FullName).ToList(),
+                CountOfStudent = department.Students.Count
+                // StudentsName = department.Students.Select(s => s.FullName).ToList(),
             };
             //foreach (var student in department.Students)
             //{
