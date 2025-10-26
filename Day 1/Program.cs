@@ -1,3 +1,5 @@
+using Microsoft.CodeAnalysis.Options;
+
 namespace Day_1
 {
     public class Program
@@ -19,19 +21,23 @@ namespace Day_1
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             //builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(option =>
-            option.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            {
-                Title = "My First API",
-                Version = "v1",
-                Description = "This is my first ASP.NET Core Web API",
-                TermsOfService = new Uri("https://www.linkedin.com/in/adham-mohamed74/"),
-                Contact = new Microsoft.OpenApi.Models.OpenApiContact
+            builder.Services.AddSwaggerGen(option => {
+                option.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-                    Name = "Adham Mohamed",
-                    Email = "adhamdr10@gmail.com"
-                }
-                })
+                    Title = "My First API",
+                    Version = "v1",
+                    Description = "This is my first ASP.NET Core Web API",
+                    TermsOfService = new Uri("https://www.linkedin.com/in/adham-mohamed74/"),
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                    {
+                        Name = "Adham Mohamed",
+                        Email = "adhamdr10@gmail.com"
+                    }
+                });
+
+
+                option.EnableAnnotations(); // to use Swagger Annotations
+            }
             );
 
             builder.Services.AddDbContext<AppDbContext>(options =>

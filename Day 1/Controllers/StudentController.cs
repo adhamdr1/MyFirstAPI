@@ -1,4 +1,6 @@
-﻿namespace Day_1.Controllers
+﻿using Swashbuckle.AspNetCore.Annotations;
+
+namespace Day_1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -34,6 +36,14 @@
 
         //[HttpGet("{id:int}")]
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary = "Get Student by Id",
+            Description = "Get Student by Id from the database",
+            OperationId = "GetStudentById"
+           // Tags = new[] { "Student Endpoints" }
+            )]
+        [SwaggerResponse(200,"Return Student",typeof(Student))]
+        [SwaggerResponse(404,"Student not found")]
         public IActionResult GetbyId(int id)
         {
             Student student = context.Students.Find(id);
