@@ -4,6 +4,8 @@ namespace Day_1
     {
         public static void Main(string[] args)
         {
+            string txt = "";
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -24,6 +26,16 @@ namespace Day_1
                 var connectionString = builder.Configuration.GetSection("constr").Value;
                 options.UseLazyLoadingProxies().UseSqlServer(connectionString);
             });
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(txt, builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                });
+            });
+
 
             var app = builder.Build();
 
@@ -38,7 +50,7 @@ namespace Day_1
 
             app.UseAuthorization();
 
-
+            app.UseCors(txt);
             app.MapControllers();
 
             app.Run();
