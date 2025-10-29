@@ -1,4 +1,6 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Day_1.Models;
+using Day_1.UnitOfWork.Interface;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Day_1.Controllers
 {
@@ -7,16 +9,16 @@ namespace Day_1.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        AppDbContext context;
-        public StudentController(AppDbContext _context)
+        IUnitOfWork unitOfWork;
+        public StudentController(IUnitOfWork unitOfWork)
         {
-            context = _context;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var students = context.Students.ToList();
+            var students = unitOfWork.StudentRepo.GetAll();
             List<StudentDTO> stdDTO = new List<StudentDTO>();
 
             foreach (var student in students)
@@ -47,7 +49,7 @@ namespace Day_1.Controllers
         [SwaggerResponse(404,"Student not found")]
         public IActionResult GetbyId(int id)
         {
-            Student student = context.Students.Find(id);
+            Student student = unitOfWork.StudentRepo.GetById(id);
             if (student == null)
             {
                 return NotFound();
@@ -68,7 +70,7 @@ namespace Day_1.Controllers
         [HttpGet("/api/sts/{name}")] //is the better
         public IActionResult Getbyname(string name)
         {
-            Student student = context.Students.FirstOrDefault(c => c.FullName == name);
+            Student student = unitOfWork.StudentRepo.GetByCondition(c => c.FullName == name);
             if (student == null)
             {
                 return NotFound();
@@ -87,8 +89,8 @@ namespace Day_1.Controllers
             {
                 return BadRequest(ModelState);
             }
-            context.Students.Add(student);
-            context.SaveChanges();
+            unitOfWork.StudentRepo.Add(student);
+            unitOfWork.Save();
             //return Created("ay7aga",student)
             return CreatedAtAction("GetbyId", new { id = student.Id }, student);
         }
@@ -104,7 +106,7 @@ namespace Day_1.Controllers
             {
                 return BadRequest();
             }
-            var existingStudent = context.Students.Find(student.Id);
+            var existingStudent = unitOfWork.StudentRepo.GetById(student.Id);
             if (existingStudent == null)
             {
                 return NotFound();
@@ -117,25 +119,25 @@ namespace Day_1.Controllers
             existingStudent.age = student.age;
             existingStudent.Address = student.Address;
             existingStudent.DepartmentId = student.DepartmentId;
-            context.Students.Update(existingStudent);
+            unitOfWork.StudentRepo.Update(existingStudent);
 
             //or
 
             //context.Entry(student).State = EntityState.Modified;  //error runtime
-            context.SaveChanges();
+            unitOfWork.Save();
             return NoContent();//204
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var existingStudent = context.Students.Find(id);
+            var existingStudent = unitOfWork.StudentRepo.GetById(id);
             if (existingStudent == null)
             {
                 return NotFound();
             }
-            context.Students.Remove(existingStudent);
-            context.SaveChanges();
+            unitOfWork.StudentRepo.Delete(existingStudent.Id);
+            unitOfWork.Save();
             return Ok(existingStudent);
         }
 

@@ -12,6 +12,8 @@ global using Day_1.DTO;
 global using Day_1.Models;
 global using Microsoft.EntityFrameworkCore.Migrations;
 global using System.Text.Json.Serialization;
+global using Day_1.UnitOfWork;
+global using Day_1.UnitOfWork.Interface;
 
 
 

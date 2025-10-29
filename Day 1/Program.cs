@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis.Options;
-
 namespace Day_1
 {
     public class Program
@@ -55,6 +53,7 @@ namespace Day_1
                 });
             });
 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
             var app = builder.Build();
 

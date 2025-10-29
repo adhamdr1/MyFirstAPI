@@ -1,20 +1,22 @@
-﻿namespace Day_1.Controllers
+﻿using Day_1.UnitOfWork.Interface;
+
+namespace Day_1.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        AppDbContext context;
-        public DepartmentController(AppDbContext _context)
+        IUnitOfWork unitOfWork;
+        public DepartmentController(IUnitOfWork unitOfWork)
         {
-            context = _context;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var departments = context.Departments.ToList();
+            var departments = unitOfWork.DepartmentRepo.GetAll();
             List<DepartmentDTO> deptDTO = new List<DepartmentDTO>();
 
             foreach (var department in departments)
@@ -37,7 +39,7 @@
         [HttpGet("{id}")]
         public IActionResult GetbyId(int id)
         {
-            Department department = context.Departments.Find(id);
+            Department department = unitOfWork.DepartmentRepo.GetById(id);
             if (department == null)
             {
                 return NotFound();
@@ -62,7 +64,7 @@
         [HttpGet("/api/dept/{name}")] //is the better
         public IActionResult Getbyname(string name)
         {
-            Department department = context.Departments.FirstOrDefault(c => c.Name == name);
+            Department department = unitOfWork.DepartmentRepo.GetByCondition(c => c.Name == name);
             if (department == null)
             {
                 return NotFound();
@@ -81,8 +83,8 @@
             {
                 return BadRequest(ModelState);
             }
-            context.Departments.Add(department);
-            context.SaveChanges();
+            unitOfWork.DepartmentRepo.Add(department);
+            unitOfWork.Save();
             //return Created("ay7aga",student)
             return CreatedAtAction("GetbyId", new { id = department.Id }, department);
         }
@@ -98,7 +100,7 @@
             {
                 return BadRequest();
             }
-            var existingDepartment = context.Departments.Find(department.Id);
+            var existingDepartment = unitOfWork.DepartmentRepo.GetById(department.Id);
             if (existingDepartment == null)
             {
                 return NotFound();
@@ -111,25 +113,25 @@
             existingDepartment.Loc = department.Loc;
             //existingDepartment.Address = department.Address;
             //existingDepartment.DepartmentId = department.DepartmentId;
-            context.Departments.Update(existingDepartment);
+            unitOfWork.DepartmentRepo.Update(existingDepartment);
 
             //or
 
             //context.Entry(student).State = EntityState.Modified;  //error runtime
-            context.SaveChanges();
+            unitOfWork.Save();
             return NoContent();//204
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var existingDepartment = context.Departments.Find(id);
+            var existingDepartment = unitOfWork.DepartmentRepo.GetById(id);
             if (existingDepartment == null)
             {
                 return NotFound();
             }
-            context.Departments.Remove(existingDepartment);
-            context.SaveChanges();
+            unitOfWork.DepartmentRepo.Delete(existingDepartment.Id);
+            unitOfWork.Save();
             return Ok(existingDepartment);
         }
 

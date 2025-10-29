@@ -1,26 +1,30 @@
-﻿namespace Day_1.Controllers
+﻿using Day_1.Models;
+using Day_1.UnitOfWork.Interface;
+
+namespace Day_1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
     {
-        AppDbContext context;
-        public CourseController(AppDbContext _context)
+        IUnitOfWork unitOfWork;
+        public CourseController(IUnitOfWork unitOfWork)
         {
-            context = _context;
+            this.unitOfWork = unitOfWork;
         }
+
 
         [HttpGet]
         public List<Course> get()
         {
-            return context.Courses.ToList();
+            return unitOfWork.CourseRepo.GetAll();
         }
 
         //[HttpGet("{id:int}")]
         [HttpGet("{id}")]
         public IActionResult getbyId(int id)
         {
-            Course course = context.Courses.Find(id);
+            Course course = unitOfWork.CourseRepo.GetById(id);
             if (course == null)
             {
                 return NotFound();
@@ -32,7 +36,7 @@
         [HttpGet("/api/crs/{name}")] //is the better
         public IActionResult coursebyname(string name)
         {
-            Course course = context.Courses.FirstOrDefault(c => c.Name == name);
+            Course course = unitOfWork.CourseRepo.GetByCondition(c => c.Name == name);
             if (course == null)
             {
                 return NotFound();
@@ -51,8 +55,8 @@
             {
                 return BadRequest(ModelState);
             }
-            context.Courses.Add(course);
-            context.SaveChanges();
+            unitOfWork.CourseRepo.Add(course);
+            unitOfWork.Save();
             //return Created("ay7aga",student)
             return CreatedAtAction("GetbyId", new { id = course.Id }, course);
         }
@@ -68,7 +72,7 @@
             {
                 return BadRequest();
             }
-            var existingCourse = context.Courses.Find(course.Id);
+            var existingCourse = unitOfWork.CourseRepo.GetById(course.Id);
             if (existingCourse == null)
             {
                 return NotFound();
@@ -80,25 +84,25 @@
             existingCourse.Name = course.Name;
             existingCourse.Duration = course.Duration;
             existingCourse.Description = course.Description;
-            context.Courses.Update(existingCourse);
+            unitOfWork.CourseRepo.Update(existingCourse);
 
             //or
 
             //context.Entry(student).State = EntityState.Modified;  //error runtime
-            context.SaveChanges();
+            unitOfWork.Save();
             return NoContent();//204
         }
 
         [HttpDelete("{id}")]
         public IActionResult deleteCourse(int id)
         {
-            var existingCourse = context.Courses.Find(id);
+            var existingCourse = unitOfWork.CourseRepo.GetById(id);
             if (existingCourse == null)
             {
                 return NotFound();
             }
-            context.Courses.Remove(existingCourse);
-            context.SaveChanges();
+            unitOfWork.CourseRepo.Delete(existingCourse.Id);
+            unitOfWork.Save();
             return Ok(existingCourse);
         }
 
