@@ -1,6 +1,9 @@
-﻿namespace Day_1.Data.Context
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+
+namespace Day_1.Data.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Department> Departments { get; set; }
         public DbSet<Course> Courses { get; set; }
@@ -16,21 +19,21 @@
 
 
         #region OnConfiguring
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
 
-        //    optionsBuilder.ConfigureWarnings(warnings =>
-        //warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            optionsBuilder.ConfigureWarnings(warnings =>
+        warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
 
-        //    var config = new ConfigurationBuilder()
-        //        .AddJsonFile("appsettings.json")
-        //        .Build();
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-        //    var connectionString = config.GetSection("constr").Value;
+            var connectionString = config.GetSection("constr").Value;
 
-        //    optionsBuilder.UseSqlServer(connectionString);
-        //}
+            optionsBuilder.UseSqlServer(connectionString);
+        }
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

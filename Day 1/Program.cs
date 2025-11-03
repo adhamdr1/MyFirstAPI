@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 namespace Day_1
 {
     public class Program
@@ -43,6 +47,29 @@ namespace Day_1
                 var connectionString = builder.Configuration.GetSection("constr").Value;
                 options.UseLazyLoadingProxies().UseSqlServer(connectionString);
             });
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            //Check JWT Token Header Replace Cookie
+            builder.Services.AddAuthentication(op =>
+            {
+                op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; //return unauthrizre();
+                op.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(op => {
+                op.SaveToken = true;
+                op.RequireHttpsMetadata = false;
+                op.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["JWT:IssuerIP"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JWT:AudienceIP"],
+                    IssuerSigningKey =
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecritKey"]))
+                };
+            });
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(txt, builder =>

@@ -14,6 +14,7 @@ namespace Day_1.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             var departments = unitOfWork.DepartmentRepo.GetAll();
